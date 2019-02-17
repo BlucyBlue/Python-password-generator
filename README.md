@@ -15,6 +15,7 @@ A module designed to generate passwords in form of a random string containing:
 6) after implementing rules 1)-5), the password is checked against database from 'https://haveibeenpwned.com/Passwords',
  to ensure its not contained in the database of passwords previously exposed in data breaches.
 
+
 Usage:
 1) in scripts:
 
@@ -30,7 +31,9 @@ Usage:
   
     python3 password.py
 
+
 Tests in test_password.py
+
 
 Important: In case of issues with running nltk.core.wordnet, consult: 'http://www.velvetcache.org/2010/03/01/looking-up-words-in-a-dictionary-using-python'
 
