@@ -27,7 +27,8 @@ Usage:
     passwords = password_generator.passwords
 
 2) from terminal (will create one PyPass instance with one password and print the resulting password):
-  python3 password.py
+  
+    python3 password.py
 
 Tests in test_password.py
 
