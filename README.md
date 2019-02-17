@@ -18,8 +18,11 @@ A module designed to generate passwords in form of a random string containing:
 Usage:
 1) in scripts:
   from password import PyPass
+  
   password_generator = PyPass()
+  
   password_generator.generate_password([optional: number of passwords])  
+  
   passwords = password_generator.passwords
 
 2) from terminal (will create one PyPass instance with one password and print the resulting password):
