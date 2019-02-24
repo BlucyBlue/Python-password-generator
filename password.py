@@ -113,6 +113,47 @@ class PyPass:
 		return pass_string
 
 
+	"""
+	Used in generate_password().
+	
+	Finds sequences of letters in the password string.
+
+	Once found, it checks if the letter sequence corresponds to an English word.
+
+	If such sequences are found, they are replaced with a random set of characters.
+	"""
+
+	def remove_english(self, my_string_list, remove_touching):
+		pass_string = ''.join(my_string_list)
+		pattern = re.compile('[a-zA-Z]+')
+
+		"""
+		Replaces English words with new random strings.
+		The process is repeated if the newly generated random string, is also an English word.
+		"""
+
+		finds = 1
+
+		while finds == 1:
+			matches = pattern.findall(pass_string)
+			if len(matches) > 0:
+				for m in matches:
+					if wordnet.synsets(m.lower()) and len(m) > 3:
+						if remove_touching:
+							pass_string = pass_string.replace(m,
+															  self.remove_touching_duplicates(self.generate_random(len(m))))
+						else:
+							pass_string = pass_string.replace(m, self.generate_random(len(m)))
+						finds = 1
+
+					else:
+						finds = 0
+			else:
+				finds = 0
+
+		return list(pass_string)
+
+		
 	# Examines if there is at least one character from each usable_chars list.
 	#
 	# Returns True if the proportion is fulfilled, and False if not.
