@@ -123,26 +123,7 @@ class PyPass:
 
 	# Generates a new dictionary reflecting the number of each char type from usable_chars in the password string.
 	def generate_new_dict(self, string_members):
-
-		string_proportions = {
-					'0':0,
-					'1':0,
-					'2':0,
-					'3':0,
-					}
-
-		for char in string_members:
-			if char in self.usable_chars[0]:
-				string_proportions['0'] += 1
-			elif char in self.usable_chars[1]:
-				string_proportions['1'] += 1
-			elif char in self.usable_chars[2]:
-				string_proportions['2'] += 1
-			else:
-				string_proportions['3'] += 1
-
-		return string_proportions
-
+		return {str(self.usable_chars.index(v)): sum(ch in v for ch in string_members) for v in self.usable_chars}
 
 	# Checks if there is at least one of each types of usable_chars in the password string using the confirm_proportions().
 	#
