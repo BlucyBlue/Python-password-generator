@@ -286,12 +286,3 @@ class PyPass:
 								   remove_english=remove_english, ensure_proportions=check_proportions)
 
 		self.passwords.append(my_pass)
-
-
-def main():
-	p = PyPass()
-	p.generate_password(secrets.choice(list(range(1,11))))
-	print(p)
-
-if __name__ == '__main__':
-	main()
