@@ -166,48 +166,63 @@ class PyPass:
 		return ''.join(string_members)
 
 
-	"""
-	Central funtion of PyPass.
-	
-	Implements other functions in order to generate a random string containing:
-		1) between 20 and 32 characters;
-		2) characters are only lower and upper case ascii letters, numbers or punctuation signs;
-		3) at least one of each char type from item 2) is contained withing the password string;
-		4) there are no sequences of same chars in the password string;
-		5) no char sequence is either an English word, nor does it belong to the list of sensitive words defined by user;
-		6) after implementing rules 1)-5), the password is checked against database from 'https://haveibeenpwned.com/Passwords',
-			to ensure its not contained in the database of passwords previously exposed in data breaches.
-	
+    """
+	The function will generate a password string from the set of usable characters described by the user in settings.py.
+
 	Argument 'pass_number' designates how many passwords are to be created. If left blank, will generate one password.
 	
-	Generated passwords are appended to self.passwords
+	Argument 'remove_repeating' designates if consecutive duplicate chars will be removed from the password. 
+	If left blank, duplicates will not be removed.
 	
+	Argument 'remove_english' designates if English words will be removed from the password. If left blank, 
+	English words will not be removed.
+	
+	Argument 'ensure_proportions' designates if the password will contain at least one char form each list 
+	in usable_chars. If left blank, these proportions will not be enforced.
+		
+	Argument 'fixed_len' will designate a fixed length of the generated password.
+
+	Generated passwords are appended to self.human_passwords
 	"""
+	def generate_password(self, pass_number=PSWRD_NO, remove_repeating=False, remove_english=False, check_proportions=False,
+					  fixed_len=FIXED_LEN):
 
-	def generate_password(self, pass_number=1):
+	# Prevents setting password number below 1.
+	if pass_number<1:
+		pass_number = 1
 
-		# Prevents setting password number below 1.
-		if pass_number < 1:
-			pass_number = 1
+	for number in range(pass_number):
+		if fixed_len:
+			pass_string_list = self.generate_random(fixed_len)
 
-		for number in range(pass_number):
+		else:
+			pass_len_range = list(range(self.min_pass_len,self.max_pass_len+1))
+			pass_string_list = self.generate_random(secrets.choice(pass_len_range))
 
-			pass_len_range = list(range(20,33))
+		# Removing touching duplicate chars, in case the user chose so.
+		if remove_repeating:
+			pass_string_list = self.remove_touching_duplicates(pass_string_list)
 
-			pass_string = self.generate_random(secrets.choice(pass_len_range))
+		# Removing English words and excluded words, if the user chose so.
+		if remove_english:
+			pass_string_list = self.remove_english(pass_string_list,remove_repeating)
 
-			# Removing touching duplicate chars.
-			my_pass = self.find_letter_sequences(self.remove_touching_duplicates(pass_string))
+		# Removing excluded words, if they are designated by the user.
+		if len(self.excluded_words) > 0:
+			pass_string_list = self.remove_excluded(pass_string_list, remove_repeating)
 
-			# Ensuring at least one member of each type from usable_chars is contained in the password string.
-			my_pass = self.ensure_proportions(my_pass)
+		# If the user chose so, ensuring at least one member of each group of characters
+		# from the usable characters lists has been included.
+		if check_proportions:
+			pass_string_list = self.ensure_proportions(pass_string_list)
 
-			# Checking if the generated password was exposed in data breaches. If so, the process is repeated.
-			if pw.is_password_breached(password=my_pass) != 0:
-				self.generate_password()
+		my_pass = ''.join(pass_string_list)
 
-			self.passwords.append(my_pass)
+		if pw.is_password_breached(password=my_pass) != 0:
+			self.generate_password(pass_number=pass_number, remove_repeating=remove_repeating,
+								   remove_english=remove_english, ensure_proportions=check_proportions)
 
+		self.passwords.append(my_pass)
 
 
 def main():
