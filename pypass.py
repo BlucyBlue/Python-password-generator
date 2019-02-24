@@ -172,8 +172,6 @@ def main():
         if args.remove_quote and not args.punctuation:
             usable_chars['punctuation'].remove("'")
 
-        print('Using simple mode.')
-        print(usable_chars)
         usable_chars = [v for v in usable_chars.values()]
 
         password_generator = PyPass(usable_chars=usable_chars, excluded_chars=[],
@@ -208,10 +206,8 @@ def main():
                                     remove_english=remove_english, ensure_proportions=ensure_proportions)
 
         if args.human:
-            print('human')
             password_generator.generate_human_password(pass_number=pass_no, fixed_len=is_fixed)
         else:
-            print('random')
             password_generator.generate_password(pass_number=pass_no, remove_repeating=remove_repeating,
                                                  remove_english=remove_english, check_proportions=ensure_proportions,
                                                  fixed_len=is_fixed)
