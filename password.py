@@ -56,7 +56,7 @@ class PyPass:
 
 	# Generates a random string of chars from types available in usable_chars
 	def generate_random(self, pass_length):
-		return ''.join([secrets.choice(secrets.choice(self.usable_chars)) for i in range(pass_length)])
+		return [secrets.choice(self.usable_chars[self.usable_chars.index(secrets.choice(self.usable_chars))]) for e in range(pass_length)]
 
 
 
