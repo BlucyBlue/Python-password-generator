@@ -62,18 +62,19 @@ class PyPass:
 
 	# This function removes two same characters which are placed one after the other,
 	# replacing them with random char from a randomly chosen usable_char list.
-	def remove_touching_duplicates(self, my_string):
-		new_string = ''
+	def remove_touching_duplicates(self, my_string_list):
+		new_string_list = []
+		
 		# The -1 range was chosen to avoid index out of range error.
-		for char in range(len(my_string[:-1])):
-			if my_string[char] == my_string[char+1]:
-				new_string += secrets.choice(secrets.choice(self.usable_chars))
+		for char in range(len(my_string_list[:-1])):
+			if my_string_list[char] == my_string_list[char+1]:
+				new_string_list.append(secrets.choice(self.usable_chars[self.usable_chars.index(secrets.choice(self.usable_chars))]))
 			else:
-				new_string += my_string[char]
+				new_string_list.append(my_string_list[char])
 
-		new_string += my_string[-1]
+		new_string_list.append(my_string_list[-1])
 
-		return(new_string)
+		return(new_string_list)
 
 
 	# Checks if a string contains any of the words or other char sequences marked as excluded in 'excluded.py'.
