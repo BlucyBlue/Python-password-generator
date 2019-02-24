@@ -1,6 +1,8 @@
 import unittest
-import password
+import itertools
+
 from password import PyPass
+
 
 class TestPassword(unittest.TestCase):
 
@@ -19,6 +21,11 @@ class TestPassword(unittest.TestCase):
 		self.p2 = PyPass()
 		self.p3 = PyPass()
 		self.p4 = PyPass()
+
+		self.hmp1 = PyPass(excluded_chars=['6','g','+','K'])
+		self.hmp2 = PyPass(excluded_chars=['8', 'v','1', '/', 'F'])
+		self.hmp3 = PyPass(excluded_chars=['7', '3', ')'])
+		self.hmp4 = PyPass(excluded_chars=['^', '7','e', 'K'])
 
 		self.p1.generate_human_password()
 		self.pass1 = self.p1.human_passwords[0]
@@ -51,7 +58,16 @@ class TestPassword(unittest.TestCase):
 		return False
 
 	"""
-	Testing generate_password()
+	Quick function for joining multiple lists into one.
+	"""
+	def join_l(self, lists_to_join):
+		joined_list_elements = []
+		for l in lists_to_join:
+			joined_list_elements += l
+		return joined_list_elements
+
+	"""
+	Testing generate_human_password()
 	"""
 	def test_pass_has_touching_duplicates(self):
 		self.assertFalse(self.has_touching_duplicates(self.pass1))
@@ -70,10 +86,14 @@ class TestPassword(unittest.TestCase):
 	Testing remove_touching_duplicates()
 	"""
 	def test_remove_touching_duplicates(self):
-		self.assertFalse(self.has_touching_duplicates(self.p1.remove_touching_duplicates('jjjsss444...')))
-		self.assertFalse(self.has_touching_duplicates(self.p2.remove_touching_duplicates('3343+++CCC')))
-		self.assertFalse(self.has_touching_duplicates(self.p3.remove_touching_duplicates('&&&HHH333bbboooo')))
-		self.assertFalse(self.has_touching_duplicates(self.p4.remove_touching_duplicates('00006564554mmmmsss????QQQ')))
+		self.assertFalse(self.has_touching_duplicates(self.p1.remove_touching_duplicates(['j','j','j','s','s','s',\
+																						  4,4,4,'.','.','.',])))
+		self.assertFalse(self.has_touching_duplicates(self.p2.remove_touching_duplicates([3,3,4,3,'+','+','+',\
+																						  'C','C','C',])))
+		self.assertFalse(self.has_touching_duplicates(self.p3.remove_touching_duplicates(['&','&','&','H','H','H',\
+																				3,3,3,'b','b','b','o','o','o','o',])))
+		self.assertFalse(self.has_touching_duplicates(self.p4.remove_touching_duplicates([0,0,0,0,6,5,6,4,5,5,4,'m',\
+																'm','m','m','s','s','s','?','?','?','?','Q','Q','Q',])))
 
 	"""
 	Testing confirm_proportions()
@@ -94,6 +114,7 @@ class TestPassword(unittest.TestCase):
 		self.assertFalse(self.hmp2.excluded_chars in self.join_l(self.hmp2.usable_chars))
 		self.assertFalse(self.hmp3.excluded_chars in self.join_l(self.hmp3.usable_chars))
 		self.assertFalse(self.hmp4.excluded_chars in self.join_l(self.hmp4.usable_chars))
+
 
 
 
