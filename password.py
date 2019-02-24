@@ -39,6 +39,8 @@ class PyPass:
 		self.min_pass_len = min_pass_len
 		self.max_pass_len = max_pass_len
 
+		# Passwords generated with self.generate_human_password will be stored here
+		self.human_passwords = []
 		# Passwords generated with self.generate_password will be stored here
 		self.passwords = []
 
