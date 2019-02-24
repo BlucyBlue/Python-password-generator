@@ -118,11 +118,7 @@ class PyPass:
 	# Returns True if the proportion is fulfilled, and False if not.
 	@staticmethod
 	def confirm_proportions(list_dict):
-		for key in list_dict.keys():
-			if list_dict[key] < 1:
-				return False
-
-		return True
+		return all(type_freq >= 1 for type_freq in list_dict.values())
 
 
 	# Generates a new dictionary reflecting the number of each char type from usable_chars in the password string.
