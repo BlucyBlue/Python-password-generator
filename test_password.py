@@ -85,6 +85,17 @@ class TestPassword(unittest.TestCase):
 		self.assertTrue(self.p3.confirm_proportions(self.my_dict3))
 		self.assertTrue(self.p4.confirm_proportions(self.my_dict4))
 
+	"""
+	Testing removal of excluded_characters from usable_chars lists.
+	"""
+
+	def test_confirm_excluded_removal(self):
+		self.assertFalse(self.hmp1.excluded_chars in self.join_l(self.hmp1.usable_chars))
+		self.assertFalse(self.hmp2.excluded_chars in self.join_l(self.hmp2.usable_chars))
+		self.assertFalse(self.hmp3.excluded_chars in self.join_l(self.hmp3.usable_chars))
+		self.assertFalse(self.hmp4.excluded_chars in self.join_l(self.hmp4.usable_chars))
+
+
 
 if __name__ == '__main__':
 	unittest.main()
