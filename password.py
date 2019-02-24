@@ -209,27 +209,37 @@ class PyPass:
 	def generate_new_dict(self, string_members):
 		return {str(self.usable_chars.index(v)): sum(ch in v for ch in string_members) for v in self.usable_chars}
 
-	# Checks if there is at least one of each types of usable_chars in the password string using the confirm_proportions().
-	#
-	# If the proportion is not fulfilled, it replaces a random character in the password string, with a randomly chosen
-	# char from the missing usable_chars type.
-	#
-	# It continues this check until the confirm_proportions() returns True.
-	def ensure_proportions(self, my_string):
-		string_members = list(my_string)
+	"""
+	Checks if there is at least one of each types of usable_chars in the password string using the confirm_proportions().
+	
+	If the proportion is not fulfilled, it replaces a random character in the password string, with a randomly chosen
+	char from the missing usable_chars type.
+	
+	It continues this check until the confirm_proportions() returns True.
+	
+	Does not check for enforcing exclusion of English words or consecutive chars, because this function will insert only
+	a single character from a list, from which not a single member is contained in the generated password.
+	
+	It will check for excluded words, since these might be a sequence of different types of chars.
+	"""
 
+	def ensure_proportions(self, string_members):
 		string_proportions = self.generate_new_dict(string_members)
 
-		while self.confirm_proportions(string_proportions) == False:
+		while not self.confirm_proportions(string_proportions):
 			for item in string_proportions.keys():
 
 				if string_proportions[item] < 1:
 					index = secrets.choice(list(range(len(string_members))))
 					string_members[index] = secrets.choice(self.usable_chars[int(item)])
 
+					# If excluded words are defined, the function will remove any contained in the new password.
+					if len(self.excluded_words) > 0:
+						string_members = self.remove_excluded(string_members, remove_touching=False)
+
 				string_proportions = self.generate_new_dict(string_members)
 
-		return ''.join(string_members)
+		return string_members
 
 		"""
 	The function will generate a password conforming to most common rules recommended for passwords generation. 
