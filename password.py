@@ -80,10 +80,7 @@ class PyPass:
 	# Checks if a string contains any of the words or other char sequences marked as excluded in 'excluded.py'.
 	@staticmethod
 	def contains_excluded(my_string):
-		for word in excluded_words:
-			if word in my_string:
-				return True
-		return False
+		return any(word in my_string for word in self.excluded_words)
 
 
 	# Finds sequences of letters in the password string.
