@@ -47,6 +47,11 @@ class PyPass:
 
 	def __str__(self):
 		return ', '.join(self.passwords)
+		
+	# Returns combined "human" and "random" passwords.
+	@property
+	def all_passwords(self):
+		return self.passwords + self.human_passwords
 
 
 	# Generates a random string of chars from types available in usable_chars
