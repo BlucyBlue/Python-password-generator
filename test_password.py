@@ -54,16 +54,16 @@ class TestPassword(unittest.TestCase):
 	Testing generate_password()
 	"""
 	def test_pass_has_touching_duplicates(self):
-		self.assertFalse(self.has_touching_duplicates(self.pass1[0]))
-		self.assertFalse(self.has_touching_duplicates(self.pass2[0]))
-		self.assertFalse(self.has_touching_duplicates(self.pass3[0]))
-		self.assertFalse(self.has_touching_duplicates(self.pass4[0]))
+		self.assertFalse(self.has_touching_duplicates(self.pass1))
+		self.assertFalse(self.has_touching_duplicates(self.pass2))
+		self.assertFalse(self.has_touching_duplicates(self.pass3))
+		self.assertFalse(self.has_touching_duplicates(self.pass4))
 
 	def test_maintains_proportions(self):
-		self.assertTrue(self.p1.confirm_proportions(self.p1.generate_new_dict(self.pass1[0])))
-		self.assertTrue(self.p2.confirm_proportions(self.p2.generate_new_dict(self.pass2[0])))
-		self.assertTrue(self.p3.confirm_proportions(self.p3.generate_new_dict(self.pass3[0])))
-		self.assertTrue(self.p4.confirm_proportions(self.p4.generate_new_dict(self.pass4[0])))
+		self.assertTrue(self.p1.confirm_proportions(self.p1.generate_new_dict(self.pass1)))
+		self.assertTrue(self.p2.confirm_proportions(self.p2.generate_new_dict(self.pass2)))
+		self.assertTrue(self.p3.confirm_proportions(self.p3.generate_new_dict(self.pass3)))
+		self.assertTrue(self.p4.confirm_proportions(self.p4.generate_new_dict(self.pass4)))
 
 
 	"""
