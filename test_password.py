@@ -20,17 +20,17 @@ class TestPassword(unittest.TestCase):
 		self.p3 = PyPass()
 		self.p4 = PyPass()
 
-		self.p1.generate_password()
-		self.pass1 = self.p1.passwords
+		self.p1.generate_human_password()
+		self.pass1 = self.p1.human_passwords[0]
 
-		self.p2.generate_password()
-		self.pass2 = self.p2.passwords
+		self.p2.generate_human_password()
+		self.pass2 = self.p2.human_passwords[0]
 
-		self.p3.generate_password()
-		self.pass3 = self.p3.passwords
+		self.p3.generate_human_password()
+		self.pass3 = self.p3.human_passwords[0]
 
-		self.p4.generate_password()
-		self.pass4 = self.p4.passwords
+		self.p4.generate_human_password()
+		self.pass4 = self.p4.human_passwords[0]
 
 		self.my_dict1 = {'0':1,'1':3,'2':0,'3':6}
 		self.my_dict2 = {'0':0,'1':9,'2':5,'3':34536}
