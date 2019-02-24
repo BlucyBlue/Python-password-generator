@@ -11,8 +11,8 @@ from settings import EXCLUDED_WORDS, USABLE_CHARS, EXCLUDED_CHARS, MAX_PASS_LEN,
 """
 Class used for storing and generating passwords.
 
-One or more passwords are generated with self.generate_password(),
-and are stored in the self.passwords.
+One or more passwords are generated with self.generate_password() [stored in the self.passwords] 
+or self.generate_human_password() [stored in the self.human_passwords].
 """
 class PyPass:
 
