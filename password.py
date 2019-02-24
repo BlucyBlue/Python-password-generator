@@ -20,13 +20,24 @@ class PyPass:
 				 max_pass_len=MAX_PASS_LEN, excluded_words=EXCLUDED_WORDS, remove_repeating=False,
 				 remove_english=False, ensure_proportions=False):
 
-		# Lists containing 4 sets of characters to be used in the password.
-		self.usable_chars = [
-			list(string.ascii_lowercase),
-			list(string.ascii_uppercase),
-			list(string.digits),
-			list(string.punctuation),
-		]
+		self.excluded_chars = excluded_chars
+
+		"""
+		Usable chars are checked against the excluded characters, and any matching chars are removed before
+		initializing usable_chars property.
+		"""
+
+		for excl_char in excluded_chars:
+			for usable_char_list in usable_chars:
+				if excl_char in usable_char_list:
+					usable_char_list.remove(excl_char)
+
+		self.usable_chars = usable_chars
+		self.excluded_words = excluded_words
+
+		# Setting the minimum and maximum length of the generated passwords.
+		self.min_pass_len = min_pass_len
+		self.max_pass_len = max_pass_len
 
 		# Passwords generated with self.generate_password will be stored here
 		self.passwords = []
