@@ -16,7 +16,9 @@ or self.generate_human_password() [stored in the self.human_passwords].
 """
 class PyPass:
 
-	def __init__(self):
+	def __init__(self, usable_chars=USABLE_CHARS, excluded_chars=EXCLUDED_CHARS, min_pass_len=MIN_PASS_LEN,
+				 max_pass_len=MAX_PASS_LEN, excluded_words=EXCLUDED_WORDS, remove_repeating=False,
+				 remove_english=False, ensure_proportions=False):
 
 		# Lists containing 4 sets of characters to be used in the password.
 		self.usable_chars = [
