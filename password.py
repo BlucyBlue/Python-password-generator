@@ -54,14 +54,14 @@ class PyPass:
 		return self.passwords + self.human_passwords
 
 
-	# Generates a random string of chars from types available in usable_chars
+	# Generates a random list of chars from types available in usable_chars
 	def generate_random(self, pass_length):
 		return [secrets.choice(self.usable_chars[self.usable_chars.index(secrets.choice(self.usable_chars))]) for e in range(pass_length)]
 
-
-
-	# This function removes two same characters which are placed one after the other,
-	# replacing them with random char from a randomly chosen usable_char list.
+	"""
+	This function removes two same characters which are placed one after the other,
+	replacing them with random char from a randomly chosen usable_char list.
+	"""
 	def remove_touching_duplicates(self, my_string_list):
 		new_string_list = []
 		
@@ -77,24 +77,30 @@ class PyPass:
 		return(new_string_list)
 
 
-	# Checks if a string contains any of the words or other char sequences marked as excluded in 'excluded.py'.
+	# Checks if a string contains any of the words or other char sequences stored in self.excluded_words.
 	@staticmethod
 	def contains_excluded(my_string):
 		return any(word in my_string for word in self.excluded_words)
 
+	"""
+	Used in generate_human_password().
+	
+	Finds sequences of letters in the password string.
+	
+	Once found, it checks if the letter sequence corresponds to an English word, or is an excluded word.
+	
+	If such sequences are found, they are replaced with a random set of characters.
+	"""
 
-	# Finds sequences of letters in the password string.
-	#
-	# Once found, it checks if the letter sequence corresponds to an English word, or is an excluded word.
-	#
-	# If such sequences are found, they are replaced with a random set of characters.
 	def find_letter_sequences(self, my_string):
 		pass_string = my_string
 		pattern = re.compile('[a-zA-Z]+')
 
-		# Replaces English words with new random strings.
-		#
-		# The process is repeated if the newly generated random string, is also an English word.
+		"""
+		Replaces English words with new random strings.
+		The process is repeated if the newly generated random string, is also an English word.
+		"""
+
 		finds = 1
 
 		while finds == 1:
@@ -196,16 +202,18 @@ class PyPass:
 
 		return list(pass_string)
 
+	"""
+	Examines if there is at least one character from each usable_chars list.
+	
+	Returns True if the proportion is fulfilled, and False if not.
+	"""
 
-	# Examines if there is at least one character from each usable_chars list.
-	#
-	# Returns True if the proportion is fulfilled, and False if not.
 	@staticmethod
 	def confirm_proportions(list_dict):
 		return all(type_freq >= 1 for type_freq in list_dict.values())
 
 
-	# Generates a new dictionary reflecting the number of each char type from usable_chars in the password string.
+	# Generates a new dictionary reflecting the number of each char type from usable_chars in the password.
 	def generate_new_dict(self, string_members):
 		return {str(self.usable_chars.index(v)): sum(ch in v for ch in string_members) for v in self.usable_chars}
 
