@@ -5,7 +5,7 @@ import re
 from nltk.corpus import wordnet
 from pyhibp import pwnedpasswords as pw
 
-from excluded import excluded_words
+from settings import EXCLUDED_WORDS, USABLE_CHARS, EXCLUDED_CHARS, MAX_PASS_LEN, MIN_PASS_LEN, FIXED_LEN, PSWRD_NO
 
 
 """
