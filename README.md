@@ -16,14 +16,23 @@ Usages:
 2) From terminal, by passing 'python3 pypass.py [parameters]' according to the following instructions:
 
 	  --password_number NUMBER_OF_PASSWORDS, -pn NUMBER_OF_PASSWORDS
+	  
 				Number of passwords to be generated.
+				
 	  --min_len MIN_PASS_LEN, -min MIN_PASS_LEN
+	  
 				Minimum password length.
+				
 	  --max_len MAX_PASS_LEN, -max MAX_PASS_LEN
+	  
 				Maximum password length.
+				
 	  --fix_len FIX_PASS_LEN, -fix FIX_PASS_LEN
+	  
 				Enforces constant length of passwords.
+				
 	  --usable_chars USER_USABLE_CHARS, -uc USER_USABLE_CHARS
+	  
 				A list of characters to be used in password
 				generation.Can be separated into multiple lists
 				('[1,2,3],['a','b','c'],[')','_','=']'),in which case
@@ -31,44 +40,61 @@ Usages:
 				proportions. Using nested lists will cause errors.If
 				not defined, USABLE_CHARS from settings.py will be
 				used.
+				
 	  --excluded_chars USER_EXCLUDED_CHARS, -ec USER_EXCLUDED_CHARS
+	  
 				A list of characters that CANNOT be used in password
 				generation.Any character listed here will be removed
 				from list(s) of usable characters. If not defined,
 				EXCLUDED_CHARS from settings.py will be used.
+				
 	  --excluded_words USER_EXCLUDED_WORDS, -ew USER_EXCLUDED_WORDS
+	  
 				A list of words or other sequences of characters that
 				can't be contained in the password.Any item from the
 				list will, if found, be removed from the password and
 				replace with a random sequence of character from the
 				usable_char list(s). If not defined, EXCLUDED_WORDS
 				from settings.py will be used.
+				
 	  --remove_english REMOVE_ENGLISH, -re REMOVE_ENGLISH
+	  
 				If not False, will cause English words to be removed
 				from the passwords.
+				
 	  --remove_repeating REMOVE_REPEATING, -rr REMOVE_REPEATING
+	  
 				If not False, will cause touching duplicate characters
 				to be removed from the passwords.
+				
 	  --ensure_proportions ENSURE_PROPORTIONS, -ep ENSURE_PROPORTIONS
+	  
 				If not False, the password will contain at least one
 				character from each list in usable_chars.
+				
 	  --human, -hu          Module will use generate_human_password() instead of
 				generate_password(). Only settings usable with this
 				function will be applied.
+				
 	  --simple, -sm         Activates 'simple' mode. User will be able to change
 				parameters for password length and use simple commands
 				to eliminate predefined character groups (numbers,
 				lowercase, uppercase and punctuation) from
 				usable_chars. Password will be generated using
 				generate_password() function.
+				
 	  --digi, -dt           Reserved for Simple Mode. Removes digits from
 				usable_chars.
+				
 	  --lower, -l           Reserved for Simple Mode. Removes lower case letters
 				from usable_chars.
+				
 	  --upper, -up          Reserved for Simple Mode. Removes upper case letters
 				from usable_chars.
+				
 	  --punct, -pu          Reserved for Simple Mode. Removes punctuation from
 				usable_chars.
+				
 	  --remove_quote, -rq   Reserved for Simple Mode. Removes single quote << ' >>
 				from usable_chars.
 				
