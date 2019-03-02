@@ -18,7 +18,7 @@ Converts any numbers in a list and its nested lists into a string.
 
 def convert_to_strings(my_list):
     for i in my_list:
-        if type(i) != list:
+        if not isinstance(i, list):
             my_list[my_list.index(i)] = str(i)
         else:
             convert_to_strings(i)
@@ -30,7 +30,6 @@ Console implementation of pypass module.
 """
 
 def main():
-
     parser = ArgumentParser(formatter_class=RawDescriptionHelpFormatter,
                             description=f"{module_name} (Version {__version__})"
                             )
@@ -181,17 +180,17 @@ def main():
 
     else:
 
-        if args.user_usable_chars != None:
+        if args.user_usable_chars is not None:
             usable_chars = convert_to_strings(list(ast.literal_eval(args.user_usable_chars)))
         else:
             usable_chars = USABLE_CHARS
 
-        if args.user_excluded_chars != None:
+        if args.user_excluded_chars is not None:
             excluded_chars = convert_to_strings(ast.literal_eval(args.user_excluded_chars))
         else:
             excluded_chars = EXCLUDED_CHARS
 
-        if args.user_excluded_words != None:
+        if args.user_excluded_words is not None:
             excluded_words = convert_to_strings(ast.literal_eval(args.user_excluded_words))
         else:
             excluded_words = EXCLUDED_WORDS
@@ -212,7 +211,7 @@ def main():
                                                  remove_english=remove_english, check_proportions=ensure_proportions,
                                                  fixed_len=is_fixed)
 
-    if len(password_generator.all_passwords)==1:
+    if len(password_generator.all_passwords) == 1:
         print(password_generator.all_passwords[0])
         return password_generator.all_passwords[0]
 
@@ -221,4 +220,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
