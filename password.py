@@ -4,6 +4,7 @@ import re
 
 from nltk.corpus import wordnet
 from pyhibp import pwnedpasswords as pw
+from pyhibp import set_user_agent
 
 from settings import EXCLUDED_WORDS, USABLE_CHARS, EXCLUDED_CHARS, MAX_PASS_LEN, MIN_PASS_LEN, FIXED_LEN, PSWRD_NO
 
@@ -43,6 +44,8 @@ class PyPass:
 		self.human_passwords = []
 		# Passwords generated with self.generate_password will be stored here
 		self.passwords = []
+
+		set_user_agent(ua="PyPass Python password generator. Demo version.")
 
 
 	def __str__(self):
