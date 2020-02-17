@@ -87,7 +87,7 @@ class Language:
 
 	def read_words_from_text(self, text_file):
 		with open(text_file, 'r') as f:
-			return [word for word in self.format_words(f.read()).spli(' ') if word not in EXCLUDED_WORDS]
+			return [word for word in self.format_words(f.read()).split(' ') if word not in EXCLUDED_WORDS]
 
 	@staticmethod
 	def add_spice(sentence):
@@ -96,7 +96,7 @@ class Language:
 	def get_words(self, library_name=None):
 		library_name = library_name or self.library_name
 
-		local_file_name = TEMPLATE_DIR + library_name + '.txt'
+		local_file_name = library_name + '.txt'
 		local_model_name = MODEL_DIR + library_name + '.pk'
 
 		# Lookup if the library is in local templates.
@@ -121,20 +121,21 @@ class Language:
 
 
 	def form_sentece(self):
-		print(f'Generating random text with length {length}.')
+		print(f'Generating random text with length {self.min_sentence_length}.')
 		
 		today = datetime.now()
-		sentence = [i for i in sent_generator.generate(length=self.min_sentence_length, 
-			random_seed=int(today.second + today.minute)) if i not in specials]
+		self.sent_generator = nltk.Text(self.get_words())
+		sentence = [i.strip() for i in self.sent_generator.generate(length=self.min_sentence_length, 
+			random_seed=int(today.second + today.minute)) if i not in self.specials]
 
-		sentence = self.format_words(''.join([i for i in sentence if i != ' ']))
+		sentence = self.format_words(''.join([i for i in sentence if i not in [' ', ''] ]))
 
 		if len(sentence) < MIN_PASS_LEN:
-			sentence = self.make_sentece()
+			sentence = self.form_sentece()
 
 		if self.check_breached:
 			if pw.is_password_breached(password=sentence) != 0:
-				sentence = self.make_sentece()
+				sentence = self.form_sentece()
 
 		return sentence
 
