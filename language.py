@@ -32,7 +32,7 @@ class ModelManager:
 
 		# Source is local.
 		if source == 'l':
-			words = self.read_words_from_text(TEMPLATE_DIR + self.library_name + '.txt')
+			words = self.read_words_from_text(f'{TEMPLATE_DIR}/{self.library_name}.txt')
 		
 		# Source is remote.
 		elif source == 'nltk':
