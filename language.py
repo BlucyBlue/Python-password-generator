@@ -60,6 +60,14 @@ class ModelManager:
 	def delete(self):
 		os.remove(os.path.join(MODEL_DIR, self.library_name + '.pk'))
 
+	@staticmethod
+	def read_words_from_text(path_to_file):
+		text = str()
+		with open(path_to_file, 'r') as f:
+			text = f.read()
+
+		return text
+
 
 class Language:
 	"""
