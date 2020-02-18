@@ -7,7 +7,7 @@ from pyhibp import pwnedpasswords as pw
 from pyhibp import set_user_agent
 
 from settings import EXCLUDED_WORDS, USABLE_CHARS, EXCLUDED_CHARS, MAX_PASS_LEN, MIN_PASS_LEN, FIXED_LEN, PSWRD_NO
-
+from language import Language
 
 """
 Class used for storing and generating passwords.
@@ -19,7 +19,7 @@ class PyPass:
 
 	def __init__(self, usable_chars=USABLE_CHARS, excluded_chars=EXCLUDED_CHARS, min_pass_len=MIN_PASS_LEN,
 				 max_pass_len=MAX_PASS_LEN, excluded_words=EXCLUDED_WORDS, remove_repeating=False,
-				 remove_english=False, ensure_proportions=False):
+				 remove_english=False, ensure_proportions=False, language_lib=None, include_whitespace=True):
 
 		self.excluded_chars = excluded_chars
 
@@ -44,6 +44,8 @@ class PyPass:
 		self.human_passwords = []
 		# Passwords generated with self.generate_password will be stored here
 		self.passwords = []
+
+		self.language_manager = Language(library=language_lib, min_sentence_length=min_pass_len, max_sentence_length=max_pass_len, include_whitespace=include_whitespace) if language_lib is not None else None
 
 		set_user_agent(ua="PyPass Python password generator. Demo version.")
 
@@ -305,8 +307,8 @@ class PyPass:
 			# Checking if the generated password was exposed in data breaches. If so, the process is repeated.
 			if pw.is_password_breached(password=my_pass) != 0:
 				self.generate_password()
-
-			self.human_passwords.append(my_pass)
+			else:
+				self.human_passwords.append(my_pass)
 
 	"""
 	The function will generate a password string from the set of usable characters described by the user in settings.py.
@@ -363,5 +365,14 @@ class PyPass:
 			if pw.is_password_breached(password=my_pass) != 0:
 				self.generate_password(pass_number=pass_number, remove_repeating=remove_repeating,
 									   remove_english=remove_english, ensure_proportions=check_proportions)
+			else:
+				self.passwords.append(my_pass)
 
-			self.passwords.append(my_pass)
+	def generate_sentence_pass(self, pass_number=PSWRD_NO):
+		for number in range(pass_number):
+			my_pass = self.language_manager.form_sentece()
+			if pw.is_password_breached(password=my_pass) != 0:
+				self.generate_sentence_pass(pass_number=pass_number)
+			else:
+				self.passwords.append(my_pass)
+
