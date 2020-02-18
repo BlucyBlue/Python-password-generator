@@ -5,7 +5,7 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from password import PyPass
 from settings import EXCLUDED_WORDS, USABLE_CHARS, EXCLUDED_CHARS, MIN_PASS_LEN, MAX_PASS_LEN, FIXED_LEN
-
+from language import ModelManager
 
 module_name = "Pypass: quickly generate passwords with Python."
 __version__ = "0.0.2"
@@ -129,11 +129,45 @@ def main():
                         )
 
     parser.add_argument("--remove_quote", "-rq",
-                        action="store_true", dest="remove_quote",
+                        action="store", dest="remove_quote",
                         help="Reserved for Simple Mode. Removes single quote << ' >> from usable_chars."
                         )
 
+    parser.add_argument("--lang_lib", "-ll",
+                        action="store", dest="lang_lib",
+                        help="Designates that the password will be generated as a random sentence, " \
+                             "without any whitespace and determines the library to be used for this."
+                        )
+
+    parser.add_argument("--incl_wspace", "-iw",
+                        action="store", dest="incl_wspace", default=True,
+                        help="Determines if whitespaces will be permitted in the natural language passwords."
+                        )
+
+    parser.add_argument("--make", "-m",
+                        action="store", dest="save_model",
+                        help="Generate nltk trigram model."
+                        )
+
+    parser.add_argument("--delete", "-d",
+                        action="store", dest="delete_model",
+                        help="Delete nltk trigram model."
+                        )
+
     args = parser.parse_args()
+
+    if args.save_model and args.delete_model:
+        raise ValueError("Cannot both save and delete a model.")
+
+    elif args.delete_model:
+        model_name = args.delete_model
+        ModelManager(model_name).delete()
+        return
+
+    elif args.save_model:
+        model_name = args.save_model
+        ModelManager(model_name).make_model(source='l')
+        return
 
     pass_no = int(args.number_of_passwords)
 
@@ -177,6 +211,10 @@ def main():
                                     min_pass_len=int(args.min_pass_len), max_pass_len=int(args.max_pass_len),
                                     excluded_words=[])
         password_generator.generate_password(pass_number=pass_no, fixed_len=is_fixed)
+
+    if args.lang_lib is not None:
+        password_generator = PyPass(min_pass_len=int(args.min_pass_len), max_pass_len=int(args.max_pass_len), language_lib=args.lang_lib, include_whitespace=ast.literal_eval(args.incl_wspace))
+        password_generator.generate_sentence_pass(pass_number=pass_no)
 
     else:
 
