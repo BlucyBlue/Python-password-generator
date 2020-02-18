@@ -1,18 +1,30 @@
 import unittest
 import itertools
+import os
+
+import nltk
 
 from password import PyPass
-
+from language import ModelManager, Language
+from text_for_testing import TEST_TEXT
+from settings import MODEL_DIR, TEMPLATE_DIR
 
 class TestPassword(unittest.TestCase):
 
 	@classmethod
 	def setUpClass(cls):
 		print('Setting up class')
+		print('Creating odyssey.txt for testing purposes.')
+		with open(f'{TEMPLATE_DIR}/odyssey.txt', 'w') as f:
+			f.write(TEST_TEXT)
+		print('Making sure wordnet nltk package is up to date.')
+		nltk.download('wordnet')
 
 	@classmethod
 	def tearDownClass(cls):
 		print('Tearing down class')
+		print('Deleting odyssey.txt.')
+		os.remove(f'{TEMPLATE_DIR}/odyssey.txt')
 
 	def setUp(self):
 		print('Setting up test')
@@ -115,6 +127,39 @@ class TestPassword(unittest.TestCase):
 		self.assertFalse(self.hmp3.excluded_chars in self.join_l(self.hmp3.usable_chars))
 		self.assertFalse(self.hmp4.excluded_chars in self.join_l(self.hmp4.usable_chars))
 
+	def test_save_and_delete_model(self):
+		model_name = 'odyssey'
+		m = ModelManager(model_name)
+		m.make_model("l")
+		self.assertTrue(f'{model_name}.pk' in os.listdir(MODEL_DIR))
+		m.delete()
+		self.assertFalse(f'{model_name}.pk' in os.listdir(MODEL_DIR))
+
+	def test_generate_sentence(self):
+		model_name = 'odyssey'
+		m = ModelManager(model_name)
+		m.make_model("l")
+		lang_pass_gen = PyPass(min_pass_len=50, max_pass_len=80, language_lib=model_name, include_whitespace=True)
+		lang_pass_gen.generate_sentence_pass()
+		password = lang_pass_gen.passwords[0]
+		self.assertTrue(" " in password)
+		self.assertTrue(len(password) > lang_pass_gen.min_pass_len)
+		self.assertFalse(len(password) < lang_pass_gen.max_pass_len)
+
+		m.delete()
+
+	def test_generate_no_whitespace_sentence(self):
+		model_name = 'odyssey'
+		m = ModelManager(model_name)
+		m.make_model("l")
+		lang_pass_gen = PyPass(min_pass_len=50, max_pass_len=80, language_lib=model_name, include_whitespace=False)
+		lang_pass_gen.generate_sentence_pass()
+		password = lang_pass_gen.passwords[0]
+		self.assertTrue(" " not in password)
+		self.assertTrue(len(password) > lang_pass_gen.min_pass_len)
+		self.assertFalse(len(password) < lang_pass_gen.max_pass_len)
+
+		m.delete()
 
 
 
