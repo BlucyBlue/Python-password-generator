@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import nltk
 from pyhibp import pwnedpasswords as pw
 
-from settings import ROOT_DIR, MODEL_DIR, TEMPLATE_DIR, MIN_PASS_LEN, EXCLUDED_WORDS
+from settings import ROOT_DIR, MODEL_DIR, TEMPLATE_DIR, MIN_PASS_LEN, EXCLUDED_WORDS, MAX_PASS_LEN
 
 
 class ModelManager:
@@ -20,7 +20,7 @@ class ModelManager:
 	def save(self, model):
 		print(f'Saving model {self.library_name} to {self.library_name}.pk.')
 
-		with open(MODEL_DIR + self.library_name + '.pk', 'wb') as f:
+		with open(f"{MODEL_DIR}/{self.library_name}.pk", 'wb') as f:
 			pickle.dump(model, f)
 		
 		print(f'Model {self.library_name} saved to {self.library_name}.pk.')		
@@ -74,11 +74,13 @@ class Language:
 	Class in charge of generating sentences based on nltk models.
 	"""
 
-	def __init__(self, library=None, min_sentence_length=None, check_breached=True):
+	def __init__(self, library=None, min_sentence_length=None, check_breached=True, max_sentence_length=None, include_whitespace=True):
 		self.library_name = library
 		self.min_sentence_length = min_sentence_length or MIN_SENT_LENGTH
+		self.max_sentence_length = max_sentence_length or MAX_PASS_LEN
 		self.check_breached = check_breached
 		self.specials = list("""./,<>?\\';|":}{][=-+_)(*&^%$#@!~`""")
+		self.include_whitespace = include_whitespace
 
 	@staticmethod
 	def format_words(words):
@@ -97,7 +99,7 @@ class Language:
 		library_name = library_name or self.library_name
 
 		local_file_name = library_name + '.txt'
-		local_model_name = MODEL_DIR + library_name + '.pk'
+		local_model_name = f"{MODEL_DIR}/{self.library_name}.pk"
 
 		# Lookup if the library is in local templates.
 		if local_file_name in os.listdir(TEMPLATE_DIR):
@@ -105,7 +107,7 @@ class Language:
 			if local_model_name not in os.listdir(MODEL_DIR):
 				ModelManager(library_name).make_model('l')
 
-			return self.read_words_from_text(local_file_name)
+			return self.read_words_from_text(os.path.join(TEMPLATE_DIR, local_file_name))
 
 		# If no local template is provided, try nltk.
 		try:
@@ -119,19 +121,39 @@ class Language:
 
 		return words.words()
 
+	def get_trigram(self, library_name=None):
+		library_name = library_name or self.library_name
+
+		local_model_name = f"{MODEL_DIR}/{self.library_name}.pk"
+
+		pickle_file = None
+		with open(os.path.join(MODEL_DIR, local_model_name), 'rb') as f:
+			pickle_file = pickle.load(f)
+		return pickle_file
 
 	def form_sentece(self):
 		print(f'Generating random text with length {self.min_sentence_length}.')
 		
 		today = datetime.now()
 		self.sent_generator = nltk.Text(self.get_words())
-		sentence = [i.strip() for i in self.sent_generator.generate(length=self.min_sentence_length, 
-			random_seed=int(today.second + today.minute)) if i not in self.specials]
+		self.sent_generator._trigram_model = self.get_trigram()
 
-		sentence = self.format_words(''.join([i for i in sentence if i not in [' ', ''] ]))
+		sentence = self.sent_generator.generate(length=self.min_sentence_length, random_seed=int(today.second + today.minute))
+		
 
-		if len(sentence) < MIN_PASS_LEN:
+		sentence = self.format_words(''.join([i for i in sentence if i not in self.specials]))
+		if not self.include_whitespace:
+			sentence = "".join([i for i in sentence if i != " "])
+
+		my_pass_len = len(sentence)
+
+		if my_pass_len < self.min_sentence_length:
 			sentence = self.form_sentece()
+		elif my_pass_len > self.max_sentence_length:
+			sentence = sentence[:self.max_sentence_length]
+			# Making sure that the last characther is not a whitespace, which would could make it difficult to see when copying.
+			if sentence[-1] == " ":
+				sentence = sentence[:-1]
 
 		if self.check_breached:
 			if pw.is_password_breached(password=sentence) != 0:
