@@ -1,4 +1,4 @@
-numpy==1.16.1
+numpy==1.22.0
 # For troubleshooting nltk installation, check:
 # http://www.velvetcache.org/2010/03/01/looking-up-words-in-a-dictionary-using-python
 nltk==3.4.5
